@@ -43,25 +43,25 @@ def test_abs_1():
     spec = z3.Implies(x >= 0, abs(x) == x)
     assert prove(spec) == PROVED
 
-@pytest.mark.skip
 def test_abs_2():
-    # TODO
-    raise NotImplementedError
+    x, y = z3.Int('x'), z3.Int('y')
+    spec = z3.Implies(x < y, abs(x) < abs(y))
+    assert prove(spec) == COUNTEREXAMPLE
 
-@pytest.mark.skip
 def test_abs_3():
-    # TODO
-    raise NotImplementedError
+    x, y = z3.Int('x'), z3.Int('y')
+    spec = z3.Implies(x == y + 1, abs(x) == abs(y) + 1)
+    assert prove(spec) == COUNTEREXAMPLE
 
-@pytest.mark.skip
 def test_abs_4():
-    # TODO
-    raise NotImplementedError
+    x = z3.Int('x')
+    spec = abs(abs(x)) == abs(x)
+    assert prove(spec) == PROVED
 
-@pytest.mark.skip
 def test_abs_5():
-    # TODO
-    raise NotImplementedError
+    x, y = z3.Int('x'), z3.Int('y')
+    spec = abs(x + y) <= abs(x) + abs(y)
+    assert prove(spec) == PROVED
 
 """
 B. Proving assertions
