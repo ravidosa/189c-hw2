@@ -65,12 +65,20 @@ your implementation is correct.
 """
 
 def pigeons_in_holes(m, n):
-    # TODO
-    raise NotImplementedError
+    if n == 0:
+        return m == 0
+    holes = [z3.Int(f"h_{i}") for i in range(n)]
+    nonnegative_constr = [hole >= 0 for hole in holes]
+    sum_constr = z3.Sum(holes) == m
+    return z3.And(nonnegative_constr + [sum_constr])
 
 def two_in_hole(m, n):
-    # TODO
-    raise NotImplementedError
+    if n == 0:
+        return False
+    holes = [z3.Int(f"h_{i}") for i in range(n)]
+    two_constr = [hole >= 2 for hole in holes]
+    sum_constr = z3.Sum(holes) == m
+    return z3.And(z3.Or(two_constr), sum_constr)
 
 """
 Test cases
@@ -78,19 +86,16 @@ Test cases
 Uncomment these to make sure your implementation is working.
 """
 
-@pytest.mark.skip
 def test_pigeons_in_holes():
     assert solve(pigeons_in_holes(4, 3)) == SAT
     assert solve(pigeons_in_holes(0, 3)) == SAT
     assert solve(pigeons_in_holes(1, 0)) == UNSAT
     assert prove(pigeons_in_holes(1, 1)) == COUNTEREXAMPLE
 
-@pytest.mark.skip
 def test_two_in_hole():
     assert solve(two_in_hole(3, 3)) == SAT
     assert prove(two_in_hole(1, 1)) == COUNTEREXAMPLE
 
-@pytest.mark.skip
 def test_combined():
     assert solve(z3.And([
         pigeons_in_holes(1, 2),
@@ -110,10 +115,8 @@ a specification (as a Z3 formula) that says that the
 pigeonhole principle is true for n + 1 pigeons and n holes.
 """
 
-@pytest.mark.skip
 def pigeonhole_principle(n):
-    # TODO
-    raise NotImplementedError
+    return z3.Implies(pigeons_in_holes(n + 1, n), two_in_hole(n + 1, n))
 
 """
 Let's test the performance of Z3 on your implementation.
@@ -128,17 +131,16 @@ otherwise the test should pass.)
 
 5. Performance summary
 (list the number of seconds or a timeout if it takes too long):
-- Small:
-- Medium:
-- Large:
+- Small: 0.5 s
+- Medium: 11.89 s
+- Large: timed out
 """
 
-@pytest.mark.skip
 def test_pigeonhole_principle_small():
     for n in range(1, 11):
         assert prove(pigeonhole_principle(n)) == PROVED
 
-@pytest.mark.skip
+
 def test_pigeonhole_principle_medium():
     assert prove(pigeonhole_principle(1000)) == PROVED
     assert prove(pigeonhole_principle(2000)) == PROVED
@@ -210,9 +212,8 @@ principle?
 If it fails, change PROVED to the expected result.
 """
 
-@pytest.mark.skip
 def test_pigeonhole_principle_general():
-    assert prove(pigeonhole_principle_general()) == PROVED
+    assert prove(pigeonhole_principle_general()) == UNKNOWN
 
 """
 Just to be sure we haven't made a mistake,
@@ -230,11 +231,33 @@ This test should pass.
 """
 
 def pigeonhole_principle_false():
-    # TODO: Copy and paste the previous function.
-    # Modify one of the constraints so that the principle is false.
-    raise NotImplementedError
+    n = z3.Int('n')
+    holes = z3.Array('holes', z3.IntSort(), z3.IntSort())
+    sum_holes = z3.Array('sums', z3.IntSort(), z3.IntSort())
 
-@pytest.mark.skip
+    sum_base_case = sum_holes[0] == 0
+    i = z3.Int('i')
+    sum_inductive = z3.ForAll(i, z3.Implies(
+        z3.And(i >= 0, i < n),
+        sum_holes[i + 1] == sum_holes[i] + holes[i]
+    ))
+
+    positive = z3.ForAll(i, z3.Implies(
+        z3.And(i >= 0, i < n),
+        holes[i] >= 0
+    ))
+
+    two_in_hole = z3.Exists(i, z3.And(i >= 0, i < n, holes[i] >= 2))
+
+    return z3.Implies(
+        z3.And([
+            n >= 0,
+            sum_base_case,
+            sum_inductive,
+        ]),
+        two_in_hole,
+    )
+
 def test_pigeonhole_principle_false():
     assert prove(pigeonhole_principle_false()) == COUNTEREXAMPLE
 
@@ -242,4 +265,7 @@ def test_pigeonhole_principle_false():
 8. Is the result what you expected?
 Why do you think Z3 has trouble with this problem?
 Comment on your thoughts below.
+===== ANSWER Q8 BELOW =====
+The result is what was expected. I think Z3 has troubles with this problem since quantifiers are involved, and Z3 is better suited for proposiional logic, not first-order logic, since the problem is unbounded.
+===== END OF Q8 ANSWER =====
 """
