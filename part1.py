@@ -93,19 +93,22 @@ def update_player_level(player_level, delta):
     return result
 
 def update_player_level_z3(player_level, delta):
-    # TODO
-    raise NotImplementedError
+    return z3.If(delta < 0, player_level, z3.If(player_level + delta > 100, 100, player_level + delta))
 
-@pytest.mark.skip
 def test_proving_assertion():
-    # TODO
-    raise NotImplementedError
+    l, d = z3.Int('l'), z3.Int('d')
+    res = update_player_level_z3(l, d)
+    spec = z3.Implies(z3.And(1 <= l, l <= 100), z3.And(1 <= res, res <= 100))
+    assert prove(spec) == PROVED
 
 """
 7. Based on this experience, do you think it would it be possible to
 automatically do the translation from update_player_level to Z3?
 
 Why or why not?
+===== ANSWER Q7 BELOW =====
+The translation was easy to do here since only conditionals and arithmetic were involved, but it might be harder if the function involved a loop or other logic that would be hard to efficiently implement in Z3.
+===== END OF Q7 ANSWER =====
 """
 
 """
