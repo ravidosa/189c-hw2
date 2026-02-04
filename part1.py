@@ -106,6 +106,7 @@ def test_proving_assertion():
 automatically do the translation from update_player_level to Z3?
 
 Why or why not?
+
 ===== ANSWER Q7 BELOW =====
 The translation was easy to do here since only conditionals and arithmetic were involved, but it might be harder if the function involved a loop or other logic that would be hard to efficiently implement in Z3.
 ===== END OF Q7 ANSWER =====
@@ -216,9 +217,10 @@ def test_rectangles_collide():
 For example, for collision detection in a game?
 What about for a simple prototype?
 Discuss one benefit and one drawback of this approach.
-===== ANSWER Q13 BELOW =====
+
+===== ANSWER Q12 BELOW =====
 One benefit would be that this implementation not only answers whether not not two rectangles collide, but finds the precise time of collision in the case where they do. However, this approach would be far too slow to be useful for real-time collision detection.
-===== END OF Q13 ANSWER =====
+===== END OF Q12 ANSWER =====
 """
 
 """

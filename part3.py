@@ -124,16 +124,26 @@ Uncomment the following tests.
 
 4. How long does it take to prove the small and medium versions
 on your machine?
-What happens when as increase the number of holes to
-tens of thousands (the "large" test)?
-(Your final code should have @pytest.mark.skip only for the tests which time out,
-otherwise the test should pass.)
+(list the number of seconds or a timeout if it takes longer than 3 minutes):
 
-5. Performance summary
-(list the number of seconds or a timeout if it takes too long):
+===== ANSWER Q4 BELOW =====
 - Small: 0.5 s
 - Medium: 11.89 s
+===== END OF Q4 ANSWER =====
+
+5. What happens when as increase the number of holes to
+tens of thousands (the "large" test)?
+(list the number of seconds or a timeout if it takes longer than 3 minutes):
+
+===== ANSWER Q5 BELOW =====
 - Large: timed out
+===== END OF Q5 ANSWER =====
+
+For both questions, assume a timeout of 3 minutes.
+
+Make sure that your final code has @pytest.mark.skip written for the tests
+which time out!
+Otherwise, the test should pass.
 """
 
 def test_pigeonhole_principle_small():
@@ -210,6 +220,10 @@ principle?
 
 6. Uncomment the following test.
 If it fails, change PROVED to the expected result.
+Describe what happened below.
+===== ANSWER Q6 BELOW =====
+
+===== END OF Q6 ANSWER =====
 """
 
 def test_pigeonhole_principle_general():
@@ -265,6 +279,7 @@ def test_pigeonhole_principle_false():
 8. Is the result what you expected?
 Why do you think Z3 has trouble with this problem?
 Comment on your thoughts below.
+
 ===== ANSWER Q8 BELOW =====
 The result is what was expected. I think Z3 has troubles with this problem since quantifiers are involved, and Z3 is better suited for proposiional logic, not first-order logic, since the problem is unbounded.
 ===== END OF Q8 ANSWER =====
